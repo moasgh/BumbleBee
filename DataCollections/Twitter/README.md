@@ -31,9 +31,9 @@ run this code in your Terminal
  python TwitterREader.py
 ```
 
-# Publication used this Code
+# Publications used this Code
 
-please cite :
+How do I cite?
 
 ```
 @inproceedings{asghari2018trends,
@@ -44,5 +44,7 @@ please cite :
   year={2018},
   organization={IEEE}
 }
-https://www.researchgate.net/profile/Mohsen_Asghari5/publication/331205903_Trends_on_Health_in_Social_Media_Analysis_using_Twitter_Topic_Modeling/links/5c75529e299bf1268d28248f/Trends-on-Health-in-Social-Media-Analysis-using-Twitter-Topic-Modeling.pdf
+
 ```
+
+[Trends on Health in Social Media: Analysis using Twitter Topic Modeling](https://www.researchgate.net/profile/Mohsen_Asghari5/publication/331205903_Trends_on_Health_in_Social_Media_Analysis_using_Twitter_Topic_Modeling/links/5c75529e299bf1268d28248f/Trends-on-Health-in-Social-Media-Analysis-using-Twitter-Topic-Modeling.pdf)
