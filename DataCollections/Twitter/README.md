@@ -34,7 +34,8 @@ run this code in your Terminal
 # Publications used this Code
 
 How do I cite?
-
+    use the BibTeX.
+[Trends on Health in Social Media: Analysis using Twitter Topic Modeling](https://www.researchgate.net/profile/Mohsen_Asghari5/publication/331205903_Trends_on_Health_in_Social_Media_Analysis_using_Twitter_Topic_Modeling/links/5c75529e299bf1268d28248f/Trends-on-Health-in-Social-Media-Analysis-using-Twitter-Topic-Modeling.pdf)
 ```
 @inproceedings{asghari2018trends,
   title={Trends on Health in Social Media: Analysis using Twitter Topic Modeling},
@@ -44,7 +45,7 @@ How do I cite?
   year={2018},
   organization={IEEE}
 }
-
 ```
+This paper is under review:
 
-[Trends on Health in Social Media: Analysis using Twitter Topic Modeling](https://www.researchgate.net/profile/Mohsen_Asghari5/publication/331205903_Trends_on_Health_in_Social_Media_Analysis_using_Twitter_Topic_Modeling/links/5c75529e299bf1268d28248f/Trends-on-Health-in-Social-Media-Analysis-using-Twitter-Topic-Modeling.pdf)
+[A Topic Modeling Framework for Spatio-Temporal Information Management](https://scholar.google.com/citations?user=f37coYgAAAAJ&hl=en)

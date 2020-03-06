@@ -141,8 +141,7 @@ if __name__ == '__main__':
     while True:
         try:
             stream.filter(
-                track=["obama"
-                    ],is_async=True
+                track=["obama"],is_async=True
             )
         except Exception as ex:
             continue
