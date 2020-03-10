@@ -480,7 +480,8 @@ class rnn_two_crf_par(nn.Module):
         scoreiob = self.crfiob.score(h_iob, yiob, mask_iob)
         scorener = self.crfner.score(h_ner, yner, mask_ner)
         #print("score :", score)
-        loss = torch.mean((Ziob + Zner) - (scoreiob + scorener))
+        #loss = torch.mean((Ziob + Zner) - (scoreiob + scorener))
+        loss = torch.mean(torch.pow((Ziob+Zner) - (scoreiob+scorener) , 2))
         return loss #torch.abs( torch.mean(Ziob - scoreiob) + torch.mean(Zner - scorener)) # NLL loss
 
     def decode(self, xc, xw, doc_lens): # for inference
@@ -633,8 +634,8 @@ class rnn_two_crf(nn.Module):
         #print("score :", score)
         #yi = torch.mean(scoreiob + scorener)
         #yi_ =  torch.mean(Ziob + Zner)
-
-        loss = torch.mean((Ziob + Zner) - (scoreiob + scorener))
+        loss = torch.mean(torch.pow((Ziob+Zner) - (scoreiob+scorener) , 2))
+        #loss = torch.mean((Ziob + Zner) - (scoreiob + scorener))
         #loss = - ((yi* torch.log(yi_)) + ((1-yi) * torch.log(1-yi_)))
         return loss # NLL loss
 
