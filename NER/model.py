@@ -289,7 +289,6 @@ class rnn_two_crf_seq2(nn.Module):
         self.DROPOUT = params['DROPOUT']
         self.RNN_TYPE = params['RNN_TYPE']
         self.HIDDEN_SIZE = params['HIDDEN_SIZE']
-        self.ACTIVE_DEVICE = params['ACTIVE_DEVICE']
         self.rnn_iob = getattr(nn, self.RNN_TYPE)(
             input_size = num_tags_ner,
             hidden_size = self.HIDDEN_SIZE // self.NUM_DIRS,
@@ -302,7 +301,7 @@ class rnn_two_crf_seq2(nn.Module):
         self.out = nn.Linear(self.HIDDEN_SIZE, num_tags_iob) # RNN output to tag
         self.crfiob = crf(num_tags_iob , params)
         self.params = params
-        self = self.cuda(self.ACTIVE_DEVICE) if CUDA else self
+        self = self.cuda(ACTIVE_DEVICE) if CUDA else self
 
     def forward(self, xc, xw, yiob , yner): # for training
         self.zero_grad()

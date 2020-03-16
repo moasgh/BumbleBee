@@ -309,7 +309,7 @@ class ModelHandler(Handler):
         result_location = is the directory that we want to save the result of the rest this directory if is not exist will be generated
         map_location = is an integer that let to assign the model to any gpu when you have multiple gpu (default is 0)
         """
-        model = self.load_model(model_path, map_location=1)
+        model = self.load_model(model_path, map_location)
         test_data = self.readtsv(test_data_location)
         test_sentences = []
         test_target_ner = []
@@ -324,9 +324,13 @@ class ModelHandler(Handler):
         output_path = result_location
         if output_path and not os.path.isdir(output_path):
             os.mkdir(output_path)
+        embed = list(self.params["EMBED"].keys())[0]
         if self.params["model_name"] == 'rnn_single_crf':
             model.evaluate(test_sentences , self.cti , self.wti , self.itt , 
-                test_target , parameters=['amacro_f1'] , model_name=self.params["model_name"] , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
+                test_target , parameters=['amacro_f1'] , model_name=self.params["model_name"]+"_"+embed , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
         else:
             model.evaluate(test_sentences , self.cti , self.wti , self.itt_iob , self.itt_ner , 
-                test_target_iob , test_target_ner , parameters=['amacro_f1'] , model_name=self.params["model_name"] , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
+                test_target_iob , test_target_ner , parameters=['amacro_f1'] , model_name=self.params["model_name"]+"_"+embed , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
+        print()
+        del model
+        torch.cuda.empty_cache()
