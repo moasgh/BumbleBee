@@ -16,7 +16,7 @@ After creating the app under the "Keys and Tokens" Tab find these below informat
     Access_Token_Secret = ''
 ```
 
-# Selecte your DataBaseName And list the langiages you are going to collect 
+# Selecte your DataBase name And list of the languages you are going to collect 
 
 ```
     CONNECTION_STRING = "sqlite:///Twitter.db"
