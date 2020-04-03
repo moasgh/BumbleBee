@@ -1,7 +1,6 @@
 # How To Collect the Twitter Stream Collecttion?
 
-This python code will help you to access twitter data more clean structured by any HashTag, CashTag, or ny other filter you have in your mind that it is valuable to be extract from twitter.
-
+This python code will help you to access twitter data more clean structured by any HashTag, CashTag, or any other filter you have in mind that it is valuable to be extract from twitter.
 
 Using our code to collect twittes would be done in 3 easy step:
 
