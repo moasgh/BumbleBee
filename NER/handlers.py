@@ -269,9 +269,10 @@ class ModelHandler(Handler):
         EVAL_EVERY = self.params["EVAL_EVERY"]
         optim = torch.optim.Adam(model.parameters(), lr = LEARNING_RATE)
 
-    def load_model(self, model_path , map_location = 0):
-        checkpoint = load_checkpoint(filename = model_path , ACTIVE_DEVICE=map_location)
-        print(checkpoint["params"])
+    def load_model(self, model_path , map_location = 0, verbos = True):
+        #print(map_location)
+        checkpoint = load_checkpoint(filename = model_path , model = None , ACTIVE_DEVICE=map_location , verbos = verbos)
+        if verbos : print(checkpoint["params"])
         model_name = checkpoint["params"]["model_name"]
         self.params = checkpoint["params"]
         self.cti = checkpoint["cti"]
@@ -294,8 +295,7 @@ class ModelHandler(Handler):
             model = rnn_two_crf_seq2(len(self.cti), len(self.wti), len(self.tti_iob) , len(self.tti_ner) , self.params)
         elif model_name.lower() == 'rnn_single_crf':
             model = rnn_single_crf(len(self.cti), len(self.wti) , len(self.tti) , self.params)
-        print(model)
-
+        if verbos: print(model)
         if model:
             model.load_state_dict(checkpoint["state_dict"])
 
@@ -334,3 +334,44 @@ class ModelHandler(Handler):
         print()
         del model
         torch.cuda.empty_cache()
+
+    def load_model_predict(self, model_name, model_path, data_path , output_path_filename = None , output_type = 'flat' , sentence_seperator = '\n' , 
+    map_location = 0 , verbos = False): 
+        """
+        model_name  = it needs to be from this list 'rnn_two_crf_par' , 'rnn_two_crf', 'rnn_two_crf_seq' , 'rnn_two_crf_seq2', 'rnn_single_crf'
+                        also the check point should be compatible with the implemented model otherwise will raise an error 
+        model_path = location of model exp: ../models/model.ckp
+            No restiction on extention of the file (ckp = check point)
+        data_path = location of test data
+        result_location = is the directory that we want to save the result of the rest this directory if is not exist will be generated
+        map_location = is an integer that let to assign the model to any gpu when you have multiple gpu (default is 0)
+        output_type = ['flat' , 'group']
+        """
+
+        if verbos:
+            print('CUDA is avaiable :' , CUDA)
+            print("Unavailable CUDA might cause an error.")
+            print("Model is mapped to : CUDA", str( map_location) , "ACTIVE-DEVICE to host the calculations : CUDA " , ACTIVE_DEVICE)
+            print("The difference between these two might cause an error. Please change the ACTIVE_DEVICE in util.py if it is necessary.")
+        model = self.load_model(model_path = model_path, map_location = map_location , verbos = verbos)
+
+        f = open(data_path, 'r' , encoding='utf8')
+        all_text = f.read()
+        f.close()
+        test_sentences = all_text.split(sentence_seperator)
+        result = model.predict(test_sentences , self.cti , self.wti , self.itt_iob , self.itt_ner)
+        if output_path_filename:
+            if output_type == 'flat':
+                result.save_flatwords(output_path_filename + '.csv')
+            elif output_type == 'group':
+                result.save_groupwords(output_path_filename + '.csv')
+        else:
+            dirpath = os.path.dirname(data_path)
+            if output_type == 'flat':
+                result.save_flatwords(output_path_filename + '.csv')
+            elif output_type == 'group':
+                result.save_groupwords(output_path_filename + '.csv')
+            print('Result is saved in ' , dirpath , ".")
+        #print('Done.')
+        del model
+        torch.cuda.empty_cache() 

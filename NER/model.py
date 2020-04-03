@@ -369,23 +369,25 @@ class rnn_two_crf_seq2(nn.Module):
         for si ,sent in enumerate(sentences) :
             words = sent.split(' ')
             x = []
+            tokens = []
             for w in words:
                 w = normalize(w)
                 wxc = [cti[c] if c in cti else UNK_IDX for c in w]
                 x.append((wxc , wti[w] if w in wti else UNK_IDX))
+                tokens.append(w)
             xc , xw = zip(*x)
             if yiob and yner:
                 assert len(yiob[si]) == len(xw) , "Tokens length is not the same as Target length (y0)!"
                 assert len(yner[si]) == len(xw) , "Tokens length is not the same as Target length (y0)!"
-                block.append((sent, xc,xw , yiob[si] , yner[si]))    
+                block.append((sent, tokens, xc,xw , yiob[si] , yner[si] ))    
             else:
-                block.append((sent, xc,xw))
+                block.append((sent, tokens, xc,xw))
         for s in block:
             if yiob and yner:
-                data.append_item( x0 = [s[0]] , xc= [list(s[1])] , xw =[list(s[2])] , yiob=s[3] , yner =s[4])
+                data.append_item( x0 = [s[0]] , x1 = [s[1]] , xc= [list(s[2])] , xw =[list(s[3])] , yiob=s[4] , yner =s[5])
                 data.append_row()
             else:
-                data.append_item( x0 = [s[0]] , xc= [list(s[1])] , xw =[list(s[2])] , yiob=[] , yner =[])
+                data.append_item( x0 = [s[0]] , x1 = [s[1]] , xc= [list(s[2])] , xw =[list(s[3])] , yiob=[]   , yner =[]  )
                 data.append_row()
         data.strip()
         data.sort()

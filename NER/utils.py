@@ -4,7 +4,7 @@ from time import time
 import os
 from os.path import isfile
 #from parameters import *
-from collections import defaultdict
+from collections import defaultdict , Counter
 from sklearn.metrics import roc_auc_score , roc_curve , auc
 import pandas as pd
 import numpy as np
@@ -53,6 +53,61 @@ def normalize(x):
     x = x.lower()
     return x
 
+def transform(text):
+    def normalizespaces(x):
+        return  re.sub('\s+' , '' , x.group(1))
+    def normalizeparenthesis(x):
+        return x.group(1)+re.sub('([^\s\w])' , r' \1 ' , x.group(2))+x.group(3)
+    def noncharacterspcae(x):
+        return ' ' +x.group(1).strip()+ ' '
+    def commanormalization(x):
+        return re.sub(r'(\,)' , r' \1 ' , x.group(1))
+    def especialwordnormalization(x):
+        return re.sub(r'(\.)' , r' \1 ' , x.group(1))
+    transforms = [
+        # this will find all the nonchracters and remove all the spaces to normalize
+        ('sub',r'((\s\W\s?)|(\s?\W\s))' , normalizespaces, False) ,
+        # create space in pranthesis to avoid them in order to split based on dot for each sentence
+        ('sub',r'([\(\[])(.+?)([\)\]])' , normalizeparenthesis, False),
+        # create space in everything except dot
+        ('sub' , r'([^\w\d\.\s\,])' , noncharacterspcae, False),
+        # Comma normalization becuase some of the numbers are seperated by comma  
+        ('sub' , r'([^0-9]\,([^0-9])?|[^0-9]?\,([^0-9]))' , commanormalization, False),
+        # this is specific for those words where they are name of something seperated by .
+        # such as E.bola or U.S.A
+        # True it means need to be recursive becuase the action might create new sample
+        # such as U.S.A => U . S.A => U . S . A
+        ('sub',r'(\s[a-zA-z]{1}\.(\s+)?)' , especialwordnormalization, True),
+        # split based on dot to create sentences
+        ('split' , r'[\.\!\?](?!\d)(?!\s)'),
+        # normalize created sentences
+        ('sub',r'((\s\W\s?)|(\s?\W\s))' , normalizespaces, False),
+        # create space for nonchartacters for future tokenization
+        # this will undrestand the unicode also
+        ('sub' , r'([^\w\d\.\s\,])' , noncharacterspcae, False),
+        # Comma normalization becuase some of the numbers are seperated by comma  
+        ('sub' , r'([^0-9]\,([^0-9])?|[^0-9]?\,([^0-9]))' , commanormalization, False),
+        ('sub' , r'(\w\.(?!\d+))' , especialwordnormalization , False)
+    ]
+    sentences = []
+    for tran in transforms:
+        if tran[0] == 'sub':
+            if sentences:
+                sentences = [re.sub(tran[1] , tran[2] , s) for s in sentences]
+            else:
+                text = re.sub(tran[1] , tran[2] , text)
+                #print(tran[0])
+                #print(text)
+                # this is where we mentioned if there need to be iterate
+                if tran[3]:
+                    while re.findall(tran[1] , text):
+                        text = re.sub(tran[1] , tran[2] , text)
+        elif tran[0] == 'split':
+            # we add dot to the end of each sentence
+            # we lower each sentence
+            sentences = [ s.lower() + ('' if s.strip().endswith('.') else ' .') for s in re.split(tran[1] , text) if len(s.strip()) > 0 ]
+    return sentences
+
 def tokenize(x, norm = True , UNIT = 'word'):
     if norm:
         x = normalize(x)
@@ -93,15 +148,17 @@ def save_tkn_to_idx(filename, tkn_to_idx):
         fo.write("%s\n" % tkn)
     fo.close()
 
-def load_checkpoint(filename, model = None , ACTIVE_DEVICE = 0 ):
-    print("loading %s" % filename)
+def load_checkpoint(filename, model = None , ACTIVE_DEVICE = 0 , verbos = True):
+    if verbos: 
+        print("loading %s" % filename)
     checkpoint = torch.load(filename , map_location="cuda:" + str(ACTIVE_DEVICE))
     if model:
         model.load_state_dict(checkpoint["state_dict"])
     epoch = checkpoint["epoch"]
     loss = checkpoint["loss"]
     #params = checkpoint["params"]
-    print("saved model: epoch = %d, loss = %f" % (epoch, loss))
+    if verbos: 
+        print("saved model: epoch = %d, loss = %f" % (epoch, loss))
     return checkpoint
 
 def save_checkpoint(filename, model, epoch, loss, time , params):
@@ -269,6 +326,79 @@ class dataloader():
             bc = LongTensor(bc) # [B * Ld, Ls, Lw]
         return bc, bw
 
+    def generate_output(self, sentence , output , doc_ix ):
+        state = []
+        ner_c = Counter()
+        anotated = []
+        for i,o in enumerate(output):
+            o = o.strip().lower()
+            if o != 'o':
+                iob,ner = o.split('-')
+                state.append(iob)
+                if state[-1] == 'b':
+                    if len(state) == 2 and state[-2] == 'b':
+                        anotated[-1][1] = ner_c.most_common(1)[0][0]
+                        ner_c.clear()
+                        state.pop()
+                    anotated.append([sentence[i] , '' , doc_ix , i])
+                    ner_c.update([ner])
+                elif state[-1] == 'i':
+                    anotated[-1][0] += ' '+ sentence[i]
+                    ner_c.update([ner])
+                    state.pop()
+            else:
+                anotated.append([sentence[i] , 'o' , doc_ix , i])
+                if state and state[-1] == 'b':
+                    anotated[-2][1] = ner_c.most_common(1)[0][0]
+                    ner_c.clear()
+                    state.pop()
+        return anotated
+
+    def save_groupwords(self, path):
+        """
+        This function will group dose words need to be connected to each other and create a csv file with this structure
+        -----------------------------------
+        'Word' | 'NER' | 'Doc_id' | 'Word_ix'
+        -----------------------------------
+        Doc_id = represent the sentence index
+        """
+        annotations = []
+        # self.x1 is the tokenize input 
+        for i,s in enumerate(self.x1):
+            sentence = []
+            output = []
+            for j,w in enumerate(s[0]):
+                sentence.append(w)
+                if self.y1iob[i][j].lower() == 'o':
+                    output.append('o')
+                else:
+                    output.append(self.y1iob[i][j] + '-'+ self.y1ner[i][j])
+            #print(sentence , output)
+            annotated = self.generate_output(sentence , output, i )
+            #print(annotated)
+            #print(''.join(['-']*30))
+            annotations.extend(annotated)
+        #print(annotations)
+        predicted = pd.DataFrame(data = annotations , columns=['Word','NER' , 'Doc_id' , 'Word_ix'] )
+        predicted.to_csv(path)
+    
+    def save_flatwords(self, path):
+        """
+        This function create a csv file with this structure
+        -----------------------------------
+        'Word' | 'IOB' | 'NER' | 'Doc_id' | 'Word_ix'
+        -----------------------------------
+        Doc_id = represent the sentence index
+        IOB = INSIDE OUT BEGIN
+        """
+        annotations = []
+        # self.x1 is the tokenize input 
+        for i,s in enumerate(self.x1):
+            for j,w in enumerate(s[0]):
+                annotations.append([w , self.y1iob[i][j] , self.y1ner[i][j] , i , j])
+        predicted = pd.DataFrame(data = annotations , columns=['Word','IOB' , 'NER' , 'Doc_id' , 'Word_ix'] )
+        predicted.to_csv(path)
+                   
 def log_sum_exp(x):
     m = torch.max(x, -1)[0]
     return m + torch.log(torch.sum(torch.exp(x - m.unsqueeze(-1)), -1))
