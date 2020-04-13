@@ -2,8 +2,8 @@ from handlers import *
 from utils import *
 import re
 import os
-embeds = [ {"char-rnn": 100} , {"char-cnn": 100} , {"lookup": 100} , {"sae": 100}]
-models = ['rnn_two_crf_par' , 'rnn_two_crf', 'rnn_two_crf_seq' , 'rnn_two_crf_seq2', 'rnn_single_crf']
+embeds = [ {"lookup": 100} ]
+models = [ 'rnn_two_crf_seq' , 'rnn_two_crf_seq2' ]
 for dbname in os.listdir('datasets/'):
     db_name = dbname
     for embed in embeds:
