@@ -5,7 +5,7 @@ This python code will help you to access twitter data more clean structured by a
 Using our code to collect tweets would be done in 3 easy step:
 
 **Please Check the Intro.ipynb, we provide a jupyter notebook example how we can collect Twitter using Cronavirus key phrases.
-"#coronavirus", "coronavirus" , "#Coronavirus"
+"#coronavirus", "coronavirus" , "#Coronavirus"**
 
 # Config and Create your twitter App 
 Create an app by access the twitter portal through this link https://developer.twitter.com/en/apps
