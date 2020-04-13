@@ -1182,3 +1182,4 @@ Natural Language Processing , LSTM , CNN, BERT, NER
 		</td>
 	</tr>
 </table>
+Natural Language Processing , LSTM , CNN, NER
