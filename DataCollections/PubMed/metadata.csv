@@ -1,0 +1,62 @@
+,Type,UI,PubmedID,NameOfSubstance,RegistryNumber,MeshHeadingID,DescriptorName,MajorTopicYN,QualifierName
+0,Chemical,D002220,11435808,Carbamazepine,33CM23913M,,,,
+1,MeshHeading,D000328,11435808,,,1,Adult,N,
+2,MeshHeading,D001921,11435808,,,2,Brain,N,
+3,MeshHeading,Q000473,11435808,,,2,,N,pathology
+4,MeshHeading,D002220,11435808,,,3,Carbamazepine,N,
+5,MeshHeading,Q000506,11435808,,,3,,Y,poisoning
+6,MeshHeading,D003128,11435808,,,4,Coma,N,
+7,MeshHeading,Q000209,11435808,,,4,,N,etiology
+8,MeshHeading,D062787,11435808,,,5,Drug Overdose,N,
+9,MeshHeading,Q000150,11435808,,,5,,N,complications
+10,MeshHeading,D004569,11435808,,,6,Electroencephalography,N,
+11,MeshHeading,Q000187,11435808,,,6,,Y,drug effects
+12,MeshHeading,D004830,11435808,,,7,"Epilepsy, Tonic-Clonic",N,
+13,MeshHeading,Q000150,11435808,,,7,,N,complications
+14,MeshHeading,D017809,11435808,,,8,Fatal Outcome,N,
+15,MeshHeading,D005260,11435808,,,9,Female,N,
+16,MeshHeading,D006323,11435808,,,10,Heart Arrest,N,
+17,MeshHeading,Q000209,11435808,,,10,,N,etiology
+18,MeshHeading,D006801,11435808,,,11,Humans,N,
+19,MeshHeading,D008991,11435808,,,12,"Monitoring, Physiologic",N,
+20,MeshHeading,D011669,11435808,,,13,Pulmonary Wedge Pressure,N,
+21,MeshHeading,D012128,11435808,,,14,"Respiratory Distress Syndrome, Adult",N,
+22,MeshHeading,Q000150,11435808,,,14,,N,complications
+23,MeshHeading,D013116,11435808,,,15,Spinal Cord,N,
+24,MeshHeading,Q000473,11435808,,,15,,N,pathology
+25,Chemical,D000972,11487721,"Antineoplastic Agents, Phytogenic",0,,,,
+26,Chemical,D017239,11487721,Paclitaxel,P88XT4IS4D,,,,
+27,MeshHeading,D000972,11487721,,,1,"Antineoplastic Agents, Phytogenic",N,
+28,MeshHeading,Q000009,11487721,,,1,,Y,adverse effects
+29,MeshHeading,D002277,11487721,,,2,Carcinoma,N,
+30,MeshHeading,Q000188,11487721,,,2,,Y,drug therapy
+31,MeshHeading,D005260,11487721,,,3,Female,N,
+32,MeshHeading,D006801,11487721,,,4,Humans,N,
+33,MeshHeading,D007866,11487721,,,5,Leg,N,
+34,MeshHeading,D008875,11487721,,,6,Middle Aged,N,
+35,MeshHeading,D010051,11487721,,,7,Ovarian Neoplasms,N,
+36,MeshHeading,Q000188,11487721,,,7,,Y,drug therapy
+37,MeshHeading,D017239,11487721,,,8,Paclitaxel,N,
+38,MeshHeading,Q000009,11487721,,,8,,Y,adverse effects
+39,MeshHeading,D010146,11487721,,,9,Pain,N,
+40,MeshHeading,Q000139,11487721,,,9,,N,chemically induced
+41,MeshHeading,D010523,11487721,,,10,Peripheral Nervous System Diseases,N,
+42,MeshHeading,Q000139,11487721,,,10,,Y,chemically induced
+43,MeshHeading,D011434,11487721,,,11,Proprioception,N,
+44,MeshHeading,Q000187,11487721,,,11,,Y,drug effects
+45,Chemical,D000998,11506739,Antiviral Agents,0,,,,
+46,Chemical,D007370,11506739,Interferon Type I,0,,,,
+47,Chemical,D011994,11506739,Recombinant Proteins,0,,,,
+48,MeshHeading,D000998,11506739,,,1,Antiviral Agents,N,
+49,MeshHeading,Q000008,11506739,,,1,,N,administration & dosage
+50,MeshHeading,D004334,11506739,,,2,Drug Administration Schedule,N,
+51,MeshHeading,D019698,11506739,,,3,"Hepatitis C, Chronic",N,
+52,MeshHeading,Q000175,11506739,,,3,,N,diagnosis
+53,MeshHeading,D006801,11506739,,,4,Humans,N,
+54,MeshHeading,D007370,11506739,,,5,Interferon Type I,N,
+55,MeshHeading,Q000008,11506739,,,5,,N,administration & dosage
+56,MeshHeading,D008297,11506739,,,6,Male,N,
+57,MeshHeading,D008875,11506739,,,7,Middle Aged,N,
+58,MeshHeading,D009157,11506739,,,8,Myasthenia Gravis,N,
+59,MeshHeading,Q000139,11506739,,,8,,Y,chemically induced
+60,MeshHeading,D011994,11506739,,,9,Recombinant Proteins,N,

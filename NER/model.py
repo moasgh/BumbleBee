@@ -21,6 +21,7 @@ class rnn_single_crf(nn.Module):
         self.crf.batch_size = y0.size(0)
         mask = y0[:, 1:].gt(PAD_IDX).float()
         #print("xw", xw.shape)
+        #print('mask' , mask.shape)
         h = self.rnn(xc, xw, mask)
         #print("h :" , h.shape)
         Z = self.crf.forward(h, mask)
