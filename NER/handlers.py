@@ -375,3 +375,43 @@ class ModelHandler(Handler):
         #print('Done.')
         del model
         torch.cuda.empty_cache() 
+
+    def summary_train_by_test(self, db_name, models , embeds , epochs = [10,501,10] , param = 'amacro_f1' , map_location = 0):
+        """
+        db_name,
+        epochs = (start,end,interval) example: (10,501,10)
+        models = ['rnn_two_crf_par' , 'rnn_two_crf', 'rnn_two_crf_seq' , 'rnn_two_crf_seq2', 'rnn_single_crf']
+        embeds = ["char-rnn","char-cnn","lookup","sae"]
+        map_location = Which GPU Default (0)
+        """
+        if not os.path.exists('Test_'+db_name):
+            os.mkdir('Test_'+db_name)
+        for e in range(epochs[0],epochs[1],epochs[2]):
+            for model in models:
+                for embed in embeds:
+                        model_name = model+'.epoch'+str(e)
+                        self.load_model_test(model+'_'+embed+'_'+db_name+'/'+model_name,
+                                    'datasets/'+db_name+'/test.tsv',
+                                    'Test_'+db_name+'/'+ str(e),
+                                    map_location)
+        #embeds = ["char-rnn","char-cnn","lookup","sae"]
+        if not os.path.exists('Summary'):
+            os.mkdir('Summary')
+
+        summ = []
+        path = 'Test_'+db_name
+        for epoch_f in glob(path+'/*'):
+            for model in os.listdir(epoch_f):
+                model_name = model.split('.')[0]
+                results = pd.read_csv(epoch_f+ '/' +model)
+                if model_name == 'rnn_single_crf':
+                    for embed in embeds:
+                        amacro_f = results[(results['Model'] == model_name + '_' + embed) & (results['label'] == 'Total')][param].values[0]
+                        summ.append([model_name , embed ,os.path.basename(epoch_f) ,  amacro_f ])
+                else:
+                    for embed in embeds:
+                        amacro_f_iob = results[(results['Model'] == model_name + '_' + embed+'_iob') & (results['label'] == 'Total')][param].values[0]
+                        amacro_f_ner = results[(results['Model'] == model_name + '_' + embed+'_ner') & (results['label'] == 'Total')][param].values[0]
+                        summ.append([model_name , embed ,os.path.basename(epoch_f) , (amacro_f_iob + amacro_f_ner)/2.0 ])
+        df = pd.DataFrame(columns=['Model','Embbed','Epoch',param] , data = summ)
+        df.to_csv('Summary'+"/"+db_name+"_Summary_"+ param +".csv")

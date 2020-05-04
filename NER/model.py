@@ -213,7 +213,7 @@ class rnn_two_crf_seq(nn.Module):
             if yiob and yner:
                 assert len(yiob[si]) == len(xw) , "Tokens length is not the same as Target length (y0)!"
                 assert len(yner[si]) == len(xw) , "Tokens length is not the same as Target length (y0)!"
-                block.append((sent, xc,xw , yiob[si] , yner[si]))    
+                block.append((sent,tokens, xc,xw , yiob[si] , yner[si]))    
             else:
                 block.append((sent,tokens, xc,xw))
         for s in block:
