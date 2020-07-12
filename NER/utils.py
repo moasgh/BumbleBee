@@ -540,4 +540,3 @@ def evaluation_report(parameter , output_filename = 'bestmodel'):
                     best_results.append(res_max)
     results = pd.concat(best_results).reindex()
     results.to_csv( output_filename + '.csv')
-

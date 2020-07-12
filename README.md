@@ -12,6 +12,15 @@ Twitter Data Collection : https://github.com/moasgh/BumbleBee/tree/master/DataCo
   year={2018},
   organization={IEEE}
 }
+
+@article{asghari2020topic,
+  title={A topic modeling framework for spatio-temporal information management},
+  author={Asghari, Mohsen and Sierra-Sosa, Daniel and Elmaghraby, Adel S},
+  journal={Information Processing \& Management},
+  pages={102340},
+  year={2020},
+  publisher={Elsevier}
+}
 ```
 
 Named Entity Regnition Datasets : https://github.com/moasgh/BumbleBee/tree/master/NER/datasets

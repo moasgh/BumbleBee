@@ -1,5 +1,5 @@
-from utils import * 
-from model import *
+from NER.utils import * 
+from NER.model import *
 import re
 import os
 
@@ -301,7 +301,7 @@ class ModelHandler(Handler):
 
         return model
     
-    def load_model_test(self, model_path, test_data_location , result_location , map_location = 0):
+    def load_model_test(self, model_path , test_data_location , result_location , map_location = 0 , model_name = None):
         """
         model_path = location of model exp: ../models/model.ckp
             No restiction on extention of the file (ckp = check point)
@@ -326,11 +326,14 @@ class ModelHandler(Handler):
             os.mkdir(output_path)
         embed = list(self.params["EMBED"].keys())[0]
         if self.params["model_name"] == 'rnn_single_crf':
+            model_name = model_name if model_name is not None else self.params["model_name"]+"_"+embed
             model.evaluate(test_sentences , self.cti , self.wti , self.itt , 
-                test_target , parameters=['amacro_f1'] , model_name=self.params["model_name"]+"_"+embed , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
+                test_target , parameters=['amacro_f1'] , model_name= model_name, save=True , filename= os.path.join(output_path , self.params["model_name"]) )
         else:
+            model_name = model_name if model_name is not None else self.params["model_name"]+"_"+embed
+            print('evaluating :' , model_name , '....')
             model.evaluate(test_sentences , self.cti , self.wti , self.itt_iob , self.itt_ner , 
-                test_target_iob , test_target_ner , parameters=['amacro_f1'] , model_name=self.params["model_name"]+"_"+embed , save=True , filename= os.path.join(output_path , self.params["model_name"]) )
+                test_target_iob , test_target_ner , parameters=['amacro_f1'] , model_name=model_name, save=True , filename= os.path.join(output_path , self.params["model_name"]) )
         print()
         del model
         torch.cuda.empty_cache()
@@ -376,7 +379,7 @@ class ModelHandler(Handler):
         del model
         torch.cuda.empty_cache() 
 
-    def summary_train_by_test(self, db_name, models , embeds , epochs = [10,501,10] , param = 'amacro_f1' , map_location = 0):
+    def summary_train_by_test(self, db_name, models , extention_names , epochs = [10,501,10] , param = 'amacro_f1' , map_location = 0):
         """
         db_name,
         epochs = (start,end,interval) example: (10,501,10)
@@ -388,12 +391,13 @@ class ModelHandler(Handler):
             os.mkdir('Test_'+db_name)
         for e in range(epochs[0],epochs[1],epochs[2]):
             for model in models:
-                for embed in embeds:
+                for extname in extention_names:
                         model_name = model+'.epoch'+str(e)
-                        self.load_model_test(model+'_'+embed+'_'+db_name+'/'+model_name,
+                        self.load_model_test(model+'_'+extname+'_'+db_name+'/'+model_name,
                                     'datasets/'+db_name+'/test.tsv',
                                     'Test_'+db_name+'/'+ str(e),
-                                    map_location)
+                                    map_location,
+                                    model_name=model+'_'+extname)
         #embeds = ["char-rnn","char-cnn","lookup","sae"]
         if not os.path.exists('Summary'):
             os.mkdir('Summary')
@@ -405,13 +409,46 @@ class ModelHandler(Handler):
                 model_name = model.split('.')[0]
                 results = pd.read_csv(epoch_f+ '/' +model)
                 if model_name == 'rnn_single_crf':
-                    for embed in embeds:
-                        amacro_f = results[(results['Model'] == model_name + '_' + embed) & (results['label'] == 'Total')][param].values[0]
-                        summ.append([model_name , embed ,os.path.basename(epoch_f) ,  amacro_f ])
+                    for extname in extention_names:
+                        amacro_f = results[(results['Model'] == model_name + '_' + extname) & (results['label'] == 'Total')][param].values[0]
+                        summ.append([model_name , extname ,os.path.basename(epoch_f) ,  amacro_f ])
                 else:
-                    for embed in embeds:
-                        amacro_f_iob = results[(results['Model'] == model_name + '_' + embed+'_iob') & (results['label'] == 'Total')][param].values[0]
-                        amacro_f_ner = results[(results['Model'] == model_name + '_' + embed+'_ner') & (results['label'] == 'Total')][param].values[0]
-                        summ.append([model_name , embed ,os.path.basename(epoch_f) , (amacro_f_iob + amacro_f_ner)/2.0 ])
+                    for extname in extention_names:
+                        amacro_f_iob = results[(results['Model'] == model_name + '_' + extname+'_iob') & (results['label'] == 'Total')][param].values[0]
+                        amacro_f_ner = results[(results['Model'] == model_name + '_' + extname+'_ner') & (results['label'] == 'Total')][param].values[0]
+                        summ.append([model_name , extname ,os.path.basename(epoch_f) , (amacro_f_iob + amacro_f_ner)/2.0 ])
         df = pd.DataFrame(columns=['Model','Embbed','Epoch',param] , data = summ)
         df.to_csv('Summary'+"/"+db_name+"_Summary_"+ param +".csv")
+
+    def load_model_predict_text(self, model_name, model_path, data , sentence_seperator = '\n' , 
+    map_location = 0 , verbos = False): 
+        """
+        model_name  = it needs to be from this list 'rnn_two_crf_par' , 'rnn_two_crf', 'rnn_two_crf_seq' , 'rnn_two_crf_seq2', 'rnn_single_crf'
+                        also the check point should be compatible with the implemented model otherwise will raise an error 
+        model_path = location of model exp: ../models/model.ckp
+            No restiction on extention of the file (ckp = check point)
+        data_path = location of test data
+        result_location = is the directory that we want to save the result of the rest this directory if is not exist will be generated
+        map_location = is an integer that let to assign the model to any gpu when you have multiple gpu (default is 0)
+        output_type = ['flat' , 'group']
+        """
+
+        if verbos:
+            print('CUDA is avaiable :' , CUDA)
+            print("Unavailable CUDA might cause an error.")
+            print("Model is mapped to : CUDA", str( map_location) , "ACTIVE-DEVICE to host the calculations : CUDA " , ACTIVE_DEVICE)
+            print("The difference between these two might cause an error. Please change the ACTIVE_DEVICE in util.py if it is necessary.")
+        model = self.load_model(model_path = model_path, map_location = map_location , verbos = verbos)
+
+        all_text = data
+        test_sentences = all_text.split(sentence_seperator)
+        result = None
+        if model_name.lower() == 'rnn_single_crf':
+            result = model.predict(test_sentences , self.cti , self.wti , self.itt)
+        else:
+            result = model.predict(test_sentences , self.cti , self.wti , self.itt_iob , self.itt_ner)
+            
+        del model
+        torch.cuda.empty_cache() 
+
+        return result

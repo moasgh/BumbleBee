@@ -1,4 +1,4 @@
-from utils import *
+from NER.utils import *
 
 class embed(nn.Module):
     def __init__(self, cti_size, wti_size, params, hre = False ):
