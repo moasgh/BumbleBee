@@ -7,9 +7,16 @@
 import handlers as hd
 import os
 ```
+
 ```
 Set the status of Model Handler to 'load'
+```
+
+```python
 modelhandler = hd.ModelHandler('load',None)
+```
+
+```
 modelhandler.load_model_predict(
 model_name,
 model_path,
@@ -20,7 +27,13 @@ sentence_seperator='\n',
 map_location=0,
 verbos=False,
 )
-model_name = it needs to be from this list 'rnn_two_crf_par' , 'rnn_two_crf', 'rnn_two_crf_seq' , 'rnn_two_crf_seq2', 'rnn_single_crf' also the check point should be compatible with the implemented model otherwise will raise an error
+---------------------------------------------------------------------------------------
+model_name = it needs to be from this list 
+'rnn_two_crf_par' , 
+'rnn_two_crf', 
+'rnn_two_crf_seq' , 
+'rnn_two_crf_seq2', 
+'rnn_single_crf' also the check point should be compatible with the implemented model otherwise will raise an error
 ---------------------------------------------------------------------------------------
 model_path = location of model exp: ../models/model.ckp
 No restiction on extention of the file (ckp = check point)
