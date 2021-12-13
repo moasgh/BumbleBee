@@ -3,9 +3,11 @@
 
 
 # Deployment
-
+```python
 import handlers as hd
 import os
+```
+```
 Set the status of Model Handler to 'load'
 modelhandler = hd.ModelHandler('load',None)
 modelhandler.load_model_predict(
@@ -29,6 +31,9 @@ result_location = is the directory that we want to save the result of the rest t
 ---------------------------------------------------------------------------------------
 map_location = is an integer that let to assign the model to any gpu when you have multiple gpu (default is 0)
 ---------------------------------------------------------------------------------------
+```
+
+```python
 output_type = ['flat' , 'group']
 modelhandler.load_model_predict('rnn_two_crf_seq',
                             'models/Disease/model',
@@ -36,6 +41,8 @@ modelhandler.load_model_predict('rnn_two_crf_seq',
                             'datasets/result_test',
                             'flat',
                             '\n', 0, True)
+```
+```
 CUDA is avaiable : True
 Unavailable CUDA might cause an error.
 Model is mapped to : CUDA 0 ACTIVE-DEVICE to host the calculations : CUDA  0
@@ -59,7 +66,7 @@ rnn_two_crf_seq2(
   (out): Linear(in_features=300, out_features=6, bias=True)
   (crfiob): crf()
 )
-
+```
 
 Natural Language Processing , LSTM , CNN, NER
 
