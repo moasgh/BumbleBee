@@ -6,7 +6,19 @@ Named Entity Recognition : https://github.com/moasgh/BumbleBee/tree/master/NER
 
 [Trends on Health in Social Media: Analysis using Twitter Topic Modeling](https://www.researchgate.net/profile/Mohsen_Asghari5/publication/331205903_Trends_on_Health_in_Social_Media_Analysis_using_Twitter_Topic_Modeling/links/5c75529e299bf1268d28248f/Trends-on-Health-in-Social-Media-Analysis-using-Twitter-Topic-Modeling.pdf)
 
+There is a growing interest on social networks for topics related to Healthcare. In particular, on Twitter, millions of tweets related to healthcare can be found. These posts contain public opinions on health, and allow to understand how is the popular perception on topics such as medical diagnosis, medicines, facilities, and claims. In this paper we present an adaptive system designed using 5 layers. The system contains a combination of unsupervised and supervised algorithms to track the trends of health social media. As it is based on a word2vec model, it also captures the correlation of words based on the context, improving over time, enhancing the accuracy of predictions and tweet tracking. In this work we focused on United States data and use it to detect the trending topics of each state. These topics are followed including new social network contributions. The supervised algorithm implemented is a Convolutional Neural Network (CNN) in conjunction with the Word2Vect model to classify and label new tweets, assigning a feedback to the topic models. The results of this algorithm present an accuracy of 83.34%, precision of 83%, recall 84% and F-Score of 83.8% when evaluated. Our results are compared with two state of the art techniques demonstrating an advantage that can be leveraged for further improvements.  
+
 [A topic modeling framework for spatio-temporal information management](https://www.sciencedirect.com/science/article/pii/S0306457320308359?casa_token=talkTmJVV14AAAAA:C6nfpEeQBd9-gl4ADV21MsZ1DbrAFPA5IGdWlAt_E5l9P5Ts1J9biQR04fLJ91QAGVb0qO6zaFM7)
+
+Highlights
+•
+Propose a robust procedure to take a decision for selecting the best topic model. We design an adaptive framework to use gained knowledge for improving the result over time. For our case study we used four topic modeling techniques and report the result of the evaluation techniques.
+
+•
+Propose a neural network using transfer learning techniques to enhance the framework ability to detect unrelated messages over data streams existing in twitter. We focus our attention in healthcare to present examples.
+
+•
+Create automatic deep cleaning method to enhance the quality of data to perform better classification in outlier and topic detection.
 
 
 [BINER: A low-cost biomedical named entity recognition](https://www.sciencedirect.com/science/article/pii/S0020025522003838)
