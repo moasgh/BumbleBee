@@ -33,6 +33,12 @@ A primary focus of the healthcare industry is to improve patient experience and 
 
 
 ```
+@article{asghari2021linking,
+  title={Linking social media, medical literature, and clinical notes using deep learning.},
+  author={Asghari, Mohsen},
+  year={2021}
+}
+
 @inproceedings{asghari2018trends,
   title={Trends on Health in Social Media: Analysis using Twitter Topic Modeling},
   author={Asghari, Mohsen and Sierra-Sosa, Daniel and Elmaghraby, Adel},
