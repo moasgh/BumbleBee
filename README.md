@@ -8,6 +8,12 @@ Named Entity Recognition : https://github.com/moasgh/BumbleBee/tree/master/NER
 
 [A topic modeling framework for spatio-temporal information management](https://www.sciencedirect.com/science/article/pii/S0306457320308359?casa_token=talkTmJVV14AAAAA:C6nfpEeQBd9-gl4ADV21MsZ1DbrAFPA5IGdWlAt_E5l9P5Ts1J9biQR04fLJ91QAGVb0qO6zaFM7)
 
+
+[BINER: A low-cost biomedical named entity recognition](https://www.sciencedirect.com/science/article/pii/S0020025522003838)
+
+A primary focus of the healthcare industry is to improve patient experience and quality of service. Practitioners and health workers are generating large volumes of text that are captured in Electronic Medical Records, clinical reports, and publications. Additionally, patients post millions of comments on social media related to healthcare, on diverse topics such as hospital services, disease symptoms, and drugs effects. Unifying various data sources can guide physicians and healthcare workers to avoid unnecessary, irrelevant information and expedite access to helpful information. The main challenge to creating Biomedical Natural Language Understanding is the lack of standard datasets and the extensive computational resources needed to develop different models. This paper proposes a model trained on low-tier GPU computers, producing comparable results to larger models like BioBERT. We propose BINER, a Biomedical Named Entity Recognition architecture using limited data and computational resources.
+
+
 ```
 @inproceedings{asghari2018trends,
   title={Trends on Health in Social Media: Analysis using Twitter Topic Modeling},
@@ -24,6 +30,16 @@ Named Entity Recognition : https://github.com/moasgh/BumbleBee/tree/master/NER
   journal={Information Processing \& Management},
   pages={102340},
   year={2020},
+  publisher={Elsevier}
+}
+
+@article{asghari2022biner,
+  title={BINER: A low-cost biomedical named entity recognition},
+  author={Asghari, Mohsen and Sierra-Sosa, Daniel and Elmaghraby, Adel S},
+  journal={Information Sciences},
+  volume={602},
+  pages={184--200},
+  year={2022},
   publisher={Elsevier}
 }
 ```
